@@ -21,6 +21,11 @@ def get_bike_count_df(filename='bike_count.csv', url=URL, force_download=False):
     '''
     if force_download or not os.path.exists(filename):
         urlretrieve(URL, filename)
-    df = pd.read_csv('bike_count.csv', index_col='Date', parse_dates=True)
+    df = pd.read_csv('bike_count.csv', index_col='Date')
+    try:
+        df.index = pd.to_datetime(df.index, format='%m/%d/%Y %I:%M:%S %p')
+    except TypeError:
+        df.index = pd.to_datetime(df.index)
+
     df.columns = ['Total', 'East', 'West']
     return df
